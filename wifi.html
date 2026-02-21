@@ -1,19 +1,89 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
-        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 320px; text-align: center; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        .btn { background: #fff; border: 1px solid #eee; padding: 15px 5px; border-radius: 15px; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .btn:active { transform: scale(0.95); background: #f0f0f0; }
-        .status { color: #2ecc71; fo
-    <div class="card">
-        <h3 style="color:#002e5b; margin-bottom:5px;">Router Admin</h3>
-        <div class="status">● Status: Connected</div>
-        <div class="grid">
-            <div class="btn" onclick="alert('Clients: 5 connected')">👥 Client List</div>
-            <div class="btn" onclick="alert('Block List Empty')">🚫 Block List</div>
-            <div class="btn" onclick="alert('Settings Opened')">🔐 Change Pass</div>
-            <div class="btn" onclick="alert('Speed: 25 Mbps
+        * { margin: 0; padding: 0; box-box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: linear-gradient(180deg, #e0f2ff 0%, #ffffff 100%); min-height: 100vh; display: flex; justify-content: center; padding: 20px; }
+        .app-card { width: 100%; max-width: 360px; background: white; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); overflow: hidden; padding-bottom: 20px; }
+        .header { text-align: center; padding: 30px 20px; }
+        .header h2 { font-size: 22px; color: #333; margin-bottom: 10px; }
+        .router-img { width: 140px; margin: 20px 0; }
+        .status-dot { display: inline-block; width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; margin-right: 5px; }
+        .speed-box { display: flex; justify-content: space-around; background: #f8fbff; margin: 0 20px 20px; padding: 15px; border-radius: 20px; }
+        .speed-item { text-align: center; }
+        .speed-item span { font-size: 11px; color: #888; display: block; }
+        .speed-item b { font-size: 16px; color: #333; }
+        .speed-item b small { font-weight: normal; font-size: 10px; margin-left: 2px; }
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
+        .menu-btn { background: #fff; border: 1px solid #f0f0f0; padding: 20px 15px; border-radius: 20px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; cursor: pointer; transition: 0.2s; }
+        .menu-btn:active { transform: scale(0.96); background: #f0f7ff; }
+        .menu-btn img { width: 24px; opacity: 0.7; }
+        .menu-btn span { font-size: 13px; font-weight: 600; color: #444; }
+        .menu-btn small { font-size: 11px; color: #2ecc71; }
+        #panel { display: none; margin: 20px; padding: 15px; background: #fdfdfd; border: 1px solid #eee; border-radius: 15px; animation: fadeInUp 0.3s; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="app-card">
+        <div class="header">
+            <h2>Dashboard</h2>
+            <p style="color:#666; font-size:13px;">Manage your network</p>
+            <img src="https://img.icons8.com/plasticine/200/router.png" class="router-img" alt="Router">
+            <div style="font-size:13px; color:#444;"><span class="status-dot"></span>Working Well</div>
+        </div>
+
+        <div class="speed-box">
+            <div class="speed-item">
+                <span>Upload Rate</span>
+                <b style="color:#2ecc71;">↑ 300<small>kbps</small></b>
+            </div>
+            <div class="speed-item">
+                <span>Download Rate</span>
+                <b style="color:#f1c40f;">↓ 150<small>kbps</small></b>
+            </div>
+        </div>
+
+        <div class="menu-grid">
+            <div class="menu-btn" onclick="showClients()">
+                <span>Network Status</span>
+                <small>Online</small>
+            </div>
+            <div class="menu-btn" onclick="showClients()">
+                <span>Clients</span>
+                <small id="c-count">16 Online</small>
+            </div>
+            <div class="menu-btn" onclick="alert('Tools coming soon!')">
+                <span>Security</span>
+                <small style="color:#888;">Scanning...</small>
+            </div>
+            <div class="menu-btn" onclick="alert('More settings available')">
+                <span>More</span>
+                <small style="color:#888;">System</small>
+            </div>
+        </div>
+
+        <div id="panel"></div>
+    </div>
+
+    <script>
+        function showClients() {
+            const p = document.getElementById('panel');
+            p.style.display = "block";
+            p.innerHTML = `
+                <h4 style="margin-bottom:10px; font-size:14px;">Connected Devices</h4>
+                <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee; font-size:13px;">
+                    <span>📱 iPhone 15 Pro</span><span style="color:#2ecc71">●</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:8px 0; font-size:13px;">
+                    <span>💻 MacBook Air</span><span style="color:#2ecc71">●</span>
+                </div>
+                <button onclick="document.getElementById('panel').style.display='none'" style="width:100%; margin-top:10px; border:none; background:#eee; padding:5px; border-radius:5px;">Close</button>
+            `;
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+    </script>
+</body>
+</html>
