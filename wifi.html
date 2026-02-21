@@ -4,31 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: #eef2f7; min-height: 100vh; display: flex; justify-content: center; padding: 10px; }
-        
-        /* Premium Container */
         .app-card { width: 100%; max-width: 375px; background: white; border-radius: 35px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); overflow: hidden; padding-bottom: 30px; }
-        
-        /* Header Section */
         .header { background: linear-gradient(135deg, #0052d4, #4364f7, #6fb1fc); padding: 40px 20px; text-align: center; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; color: white; }
-        .router-img { width: 120px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2)); margin: 15px 0; }
+        .router-img { width: 100px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2)); margin: 15px 0; }
         .status-badge { background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; font-size: 12px; display: inline-block; }
-
-        /* Speed Section */
         .speed-container { display: flex; justify-content: space-around; background: #fff; margin: -25px 25px 20px; padding: 20px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         .speed-item span { font-size: 10px; color: #888; text-transform: uppercase; display: block; }
         .speed-item b { font-size: 16px; color: #333; }
-
-        /* Icon Grid */
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
-        .menu-btn { background: #f8fbff; border: 1px solid #f0f4f8; padding: 18px 15px; border-radius: 22px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; cursor: pointer; transition: 0.3s ease; }
+        .menu-btn { background: #f8fbff; border: 1px solid #f0f4f8; padding: 18px 15px; border-radius: 22px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; cursor: pointer; transition: 0.3s ease; text-decoration: none; }
         .menu-btn:active { transform: scale(0.94); background: #eef5ff; }
-        
-        /* Custom Icon Boxes */
         .icon-box { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
         .icon-box img { width: 26px; height: 26px; }
-
         .menu-btn span { font-size: 14px; font-weight: 700; color: #2c3e50; }
         .menu-btn small { font-size: 11px; color: #7f8c8d; }
     </style>
@@ -38,7 +27,7 @@
         <div class="header">
             <div class="status-badge">Archer BE900 • Online</div>
             <br>
-            <img src="https://img.icons8.com/plasticine/200/router.png" class="router-img">
+            <img src="https://img.icons8.com/fluency/100/router.png" class="router-img">
             <h2 style="font-weight: 600; letter-spacing: 0.5px;">Network Healthy</h2>
         </div>
 
@@ -48,17 +37,17 @@
         </div>
 
         <div class="menu-grid">
-            <div class="menu-btn" onclick="window.location.href='https://wa.me/YOUR_NUMBER'">
+            <a href="https://wa.me/8801977769371" class="menu-btn">
                 <div class="icon-box" style="background: #e8f5e9;"><img src="https://img.icons8.com/color/48/whatsapp.png"></div>
                 <span>WhatsApp</span>
                 <small>Live Support</small>
-            </div>
+            </a>
             
-            <div class="menu-btn" onclick="window.location.href='tel:YOUR_NUMBER'">
+            <a href="tel:01977769371" class="menu-btn">
                 <div class="icon-box" style="background: #e3f2fd;"><img src="https://img.icons8.com/fluency/48/phone.png"></div>
                 <span>Call Us</span>
-                <small>Helpline 24/7</small>
-            </div>
+                <small>01977769371</small>
+            </a>
 
             <div class="menu-btn" onclick="alert('Redirecting to Payment Gateway...')">
                 <div class="icon-box" style="background: #fff3e0;"><img src="https://img.icons8.com/fluency/48/bill.png"></div>
@@ -78,11 +67,11 @@
                 <small style="color: #2ecc71;">16 Online</small>
             </div>
 
-            <div class="menu-btn" onclick="alert('Speed Test Starting...')">
+            <a href="https://fast.com" target="_blank" class="menu-btn">
                 <div class="icon-box" style="background: #fce4ec;"><img src="https://img.icons8.com/fluency/48/speedometer.png"></div>
                 <span>Speed Test</span>
-                <small>Check Quality</small>
-            </div>
+                <small>Fast.com</small>
+            </a>
         </div>
     </div>
 </body>
