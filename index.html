@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milk Order - Amar Bazar</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px; background: #f4f7f6; }
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); max-width: 320px; margin: auto; border: 1px solid #eee; }
+        .icon { font-size: 50px; margin-bottom: 10px; display: block; }
+        h2 { color: #2ecc71; margin: 10px 0; }
+        .price { font-size: 24px; font-weight: bold; color: #333; margin: 15px 0; }
+        .desc { color: #666; font-size: 14px; margin-bottom: 20px; }
+        button { background: #2ecc71; color: white; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; transition: 0.3s; }
+        button:active { transform: scale(0.95); background: #27ae60; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <span class="icon">🥛</span>
+        <h2>Pure Milk</h2>
+        <p class="desc">Fresh 1 Litre Cow Milk</p>
+        <div class="price">৳ 80.00</div>
+        <button onclick="confirmOrder()">Confirm Order</button>
+    </div>
+
+    <script>
+        function confirmOrder() {
+            let userConfirm = confirm("Are you sure you want to buy 1L Milk for ৳80?");
+            if(userConfirm) {
+                // এখানে তুমি তোমার পেমেন্ট লজিক বা সাকসেস মেসেজ দিতে পারো
+                alert("Order Placed Successfully! ৳80 will be adjusted from your Amar Bazar ID.");
+                window.location.href = "about:blank"; // অর্ডার শেষ হলে পেজ বন্ধ বা অন্য কোথাও পাঠাতে
+            }
+        }
+    </script>
+</body>
+</html>
