@@ -3,148 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amar Bazar | Full Admin Control</title>
+    <title>Amar Bazar | Pro Admin Console</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --bg: #0b1120; --card: #16213e; --neon: #00d2ff; --danger: #ef4444; --success: #22c55e; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; margin: 0; padding: 15px; }
+        :root { --bg: #0b1120; --card: #1e293b; --neon: #0ea5e9; --success: #22c55e; --danger: #ef4444; --warning: #f59e0b; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: white; margin: 0; padding: 0; }
         
-        .header { 
-            background: linear-gradient(135deg, #00d2ff, #3a7bd5); 
-            padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0,210,255,0.3);
-        }
-        
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .stat-box { background: var(--card); padding: 15px; border-radius: 12px; text-align: center; border-bottom: 3px solid var(--neon); }
-        .stat-box b { font-size: 20px; color: var(--neon); display: block; }
+        .sidebar { background: #0f172a; padding: 20px; text-align: center; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 100; }
+        .nav-tabs { display: flex; overflow-x: auto; gap: 10px; padding: 10px; background: #1e293b; border-bottom: 2px solid var(--neon); }
+        .tab-btn { background: none; border: none; color: #94a3b8; padding: 10px 20px; cursor: pointer; font-weight: 600; white-space: nowrap; }
+        .tab-btn.active { color: var(--neon); border-bottom: 2px solid var(--neon); }
 
-        .card { background: var(--card); padding: 18px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #2d3748; }
-        .card h3 { margin-top: 0; font-size: 16px; color: var(--neon); border-bottom: 1px solid #2d3748; padding-bottom: 10px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .container { padding: 20px; max-width: 800px; margin: auto; }
+        .card { background: var(--card); border-radius: 15px; padding: 20px; margin-bottom: 20px; border: 1px solid #334155; }
         
-        input { width: 100%; padding: 12px; background: #0b1120; border: 1px solid #2d3748; border-radius: 10px; color: white; margin-bottom: 10px; box-sizing: border-box; outline: none; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #94a3b8; font-size: 14px; }
+        input, select { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; box-sizing: border-box; }
         
-        .btn-group { display: flex; gap: 10px; }
-        button { flex: 1; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-update { background: var(--neon); color: #0b1120; }
-        .btn-block { background: var(--danger); color: white; }
+        button { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 5px; }
+        .btn-primary { background: var(--neon); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
 
-        .log-container { max-height: 250px; overflow-y: auto; scrollbar-width: thin; }
-        .item { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 10px; margin-bottom: 8px; border-left: 4px solid var(--neon); font-size: 13px; position: relative; }
-        .order-item { border-left-color: #e67e22; }
-        .btn-del { position: absolute; right: 10px; top: 10px; color: var(--success); background: none; border: none; font-size: 18px; cursor: pointer; }
+        .list-item { background: #0f172a; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid var(--neon); position: relative; }
+        .order-badge { padding: 4px 8px; border-radius: 5px; font-size: 11px; float: right; background: var(--warning); color: black; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <script>
-        let pass = prompt("Admin Password দিন:");
-        if (pass !== "2026") { // আপনার পাসওয়ার্ড '2026' সেট করা হয়েছে
-            alert("ভুল পাসওয়ার্ড!");
-            document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:50px;'>ACCESS DENIED</h1>";
-        }
-    </script>
+<script>
+    let pass = prompt("Admin Security Key:");
+    if(pass !== "2026") { document.body.innerHTML = "<h1>Unauthorized Access</h1>"; window.stop(); }
+</script>
 
-    <div class="header">
-        <h2 style="margin:0">SYSTEM CONTROL</h2>
-        <small>Real-time Admin Console</small>
-    </div>
+<div class="sidebar">
+    <h2 style="margin:0; color:var(--neon)">AMAR BAZAR PRO</h2>
+    <p style="font-size:12px; opacity:0.7">Master Control Dashboard</p>
+</div>
 
-    <div class="stats-grid">
-        <div class="stat-box"><b id="total-users">0</b>Users</div>
-        <div class="stat-box"><b id="total-cash">৳0</b>System Cash</div>
-    </div>
+<div class="nav-tabs">
+    <button class="tab-btn active" onclick="openTab('users')"><i class="fas fa-users"></i> Users</button>
+    <button class="tab-btn" onclick="openTab('orders')"><i class="fas fa-shopping-cart"></i> Orders</button>
+    <button class="tab-btn" onclick="openTab('products')"><i class="fas fa-box"></i> Products</button>
+    <button class="tab-btn" onclick="openTab('settings')"><i class="fas fa-cog"></i> Settings</button>
+</div>
 
-    <div class="card">
-        <h3><i class="fas fa-user-cog"></i> Control User</h3>
-        <input id="target-id" type="tel" placeholder="User ID (Phone Number)">
-        <input id="target-amt" type="number" placeholder="Amount (+/- 100)">
-        <button class="btn-update" style="width:100%; margin-bottom:10px;" onclick="updateBalance()">Update Balance</button>
-        <div class="btn-group">
-            <button class="btn-block" onclick="setStatus('Blocked')">Block User</button>
-            <button style="background:var(--success); color:white;" onclick="setStatus('Active')">Unblock</button>
+<div class="container">
+    
+    <div id="users" class="tab-content">
+        <div class="card">
+            <h3>User Management</h3>
+            <div class="input-group">
+                <input id="u-id" type="tel" placeholder="User Phone Number">
+            </div>
+            <div class="input-group">
+                <input id="u-amt" type="number" placeholder="Amount (+/-)">
+            </div>
+            <button class="btn-primary" onclick="manageUser('balance')">Update Balance</button>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button class="btn-danger" onclick="manageUser('Blocked')">Block</button>
+                <button class="btn-success" onclick="manageUser('Active')">Unblock</button>
+            </div>
         </div>
     </div>
 
-    <div class="card">
-        <h3><i class="fas fa-truck-loading"></i> Live Milk Orders</h3>
-        <div id="order-logs" class="log-container">
-            <p style="text-align:center; color:#555;">No orders yet...</p>
+    <div id="orders" class="tab-content hidden">
+        <h3>Live Orders</h3>
+        <div id="master-order-list"></div>
+    </div>
+
+    <div id="products" class="tab-content hidden">
+        <div class="card">
+            <h3>Update Product Price</h3>
+            <select id="p-name">
+                <option value="milk">Milk (1L)</option>
+                <option value="honey">Honey (500g)</option>
+                <option value="oil">Cooking Oil (1L)</option>
+                <option value="egg">Egg (1 Dozen)</option>
+            </select>
+            <input id="p-price" type="number" placeholder="New Price" style="margin-top:10px;">
+            <button class="btn-primary" onclick="updatePrice()">Update Live Price</button>
         </div>
     </div>
 
-    <div class="card">
-        <h3><i class="fas fa-history"></i> Recent Transactions</h3>
-        <div id="tx-logs" class="log-container"></div>
+    <div id="settings" class="tab-content hidden">
+        <div class="card">
+            <h3>Global Notice</h3>
+            <input id="notice-msg" type="text" placeholder="Type announcement...">
+            <button class="btn-success" onclick="setNotice('Active')" style="margin-top:10px;">Publish</button>
+            <button class="btn-danger" onclick="setNotice('Hidden')" style="margin-top:5px;">Hide</button>
+        </div>
+        <div class="card">
+            <h3>Service Status</h3>
+            <button onclick="toggleService('recharge')" id="btn-recharge">Recharge: ON</button>
+            <button onclick="toggleService('tickets')" id="btn-tickets" style="margin-top:5px;">Tickets: ON</button>
+        </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+</div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDvSODDF6mMbMq4uAin9nn8r8RWSn6xA7c",
-            authDomain: "amar-bazar-77e5d.firebaseapp.com",
-            databaseURL: "https://amar-bazar-77e5d-default-rtdb.firebaseio.com",
-            projectId: "amar-bazar-77e5d",
-            storageBucket: "amar-bazar-77e5d.firebasestorage.app",
-            messagingSenderId: "1005911914259",
-            appId: "1:1005911914259:web:f6c6f999499f0f757f0ce6"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
 
-        function updateBalance() {
-            let id = document.getElementById('target-id').value;
-            let amt = parseFloat(document.getElementById('target-amt').value);
-            if(!id || isNaN(amt)) return alert("ID and Amount দিন!");
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDvSODDF6mMbMq4uAin9nn8r8RWSn6xA7c",
+        authDomain: "amar-bazar-77e5d.firebaseapp.com",
+        databaseURL: "https://amar-bazar-77e5d-default-rtdb.firebaseio.com",
+        projectId: "amar-bazar-77e5d",
+        storageBucket: "amar-bazar-77e5d.firebasestorage.app",
+        messagingSenderId: "1005911914259",
+        appId: "1:1005911914259:web:f6c6f999499f0f757f0ce6"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-            db.ref('users/' + id).once('value', s => {
-                if(s.exists()){
-                    let newBal = (s.val().balance || 0) + amt;
-                    db.ref('users/' + id).update({ balance: newBal });
-                    db.ref('transactions').push({ from: "Admin", to: id, amount: amt, time: new Date().toLocaleString() });
-                    alert("ব্যালেন্স আপডেট হয়েছে!");
-                } else { alert("ইউজার পাওয়া যায়নি!"); }
+    // Tab Logic
+    function openTab(name) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(name).classList.remove('hidden');
+        event.currentTarget.classList.add('active');
+    }
+
+    // User Logic
+    function manageUser(action) {
+        let id = document.getElementById('u-id').value;
+        if(!id) return alert("ID Required");
+        if(action === 'balance') {
+            let amt = parseFloat(document.getElementById('u-amt').value);
+            db.ref('users/'+id).once('value', s => {
+                let newBal = (s.val().balance || 0) + amt;
+                db.ref('users/'+id).update({ balance: newBal });
+                alert("Balance Updated!");
             });
+        } else {
+            db.ref('users/'+id).update({ status: action });
+            alert("User Status: " + action);
         }
+    }
 
-        function setStatus(st) {
-            let id = document.getElementById('target-id').value;
-            if(!id) return alert("ID দিন!");
-            db.ref('users/' + id).update({ status: st });
-            alert("ইউজার এখন " + st);
-        }
+    // Price Update Logic
+    function updatePrice() {
+        let name = document.getElementById('p-name').value;
+        let price = document.getElementById('p-price').value;
+        db.ref('prices/'+name).set(parseFloat(price));
+        alert(name + " price updated to " + price);
+    }
 
-        db.ref('users').on('value', snap => {
-            let totalCash = 0, count = 0;
-            snap.forEach(u => { count++; totalCash += (u.val().balance || 0); });
-            document.getElementById('total-users').innerText = count;
-            document.getElementById('total-cash').innerText = "৳" + totalCash.toFixed(0);
+    // Order Tracking
+    db.ref('orders').on('value', snap => {
+        const list = document.getElementById('master-order-list');
+        list.innerHTML = "";
+        snap.forEach(o => {
+            let d = o.val();
+            list.innerHTML += `
+            <div class="list-item">
+                <span class="order-badge">${d.status || 'Pending'}</span>
+                <b>User: ${d.userId}</b><br>
+                Item: ${d.item || 'Milk'} | Qty: ${d.qty} | Bill: ৳${d.bill}<br>
+                <small>${o.key}</small>
+                <button onclick="db.ref('orders/${o.key}').remove()" style="width:auto; padding:5px 10px; background:var(--success); font-size:10px; margin-left:10px;">Complete</button>
+            </div>`;
         });
+    });
 
-        db.ref('orders').on('value', snap => {
-            const box = document.getElementById('order-logs');
-            box.innerHTML = "";
-            snap.forEach(o => {
-                let d = o.val();
-                box.innerHTML = `<div class="item order-item">
-                    <b>User: ${d.userId}</b><br>Qty: ${d.qty}L | Bill: ৳${d.bill}<br>
-                    <button class="btn-del" onclick="db.ref('orders/${o.key}').remove()"><i class="fas fa-check-circle"></i></button>
-                </div>` + box.innerHTML;
-            });
-        });
-
-        db.ref('transactions').on('value', snap => {
-            const box = document.getElementById('tx-logs');
-            box.innerHTML = "";
-            snap.forEach(t => {
-                let d = t.val();
-                box.innerHTML = `<div class="item">
-                    <b>${d.from} → ${d.to}</b><br>Amt: ৳${d.amount} | <small>${d.time}</small>
-                </div>` + box.innerHTML;
-            });
-        });
-    </script>
+    // Settings
+    function setNotice(st) {
+        let m = document.getElementById('notice-msg').value;
+        db.ref('app_notice').set({ message: m, status: st });
+        alert("Notice " + st);
+    }
+</script>
 </body>
 </html>
