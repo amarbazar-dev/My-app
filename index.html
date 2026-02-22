@@ -5,36 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Milk Order - Amar Bazar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+
     <style>
-        :root {
-            --primary-color: #2ecc71;
-            --cashback-color: #f39c12;
-        }
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f8f9fa; margin: 0; padding: 15px; }
-        .container { max-width: 450px; margin: auto; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        
-        /* Product Image Section */
-        .product-header { position: relative; text-align: center; background: #fff; padding: 20px; }
-        .product-header img { width: 100%; max-height: 250px; object-fit: contain; }
-        
-        /* Daraz Style Cashback Tag */
-        .cashback-badge { position: absolute; top: 10px; left: 0; background: var(--cashback-color); color: white; padding: 5px 12px; font-size: 12px; font-weight: bold; border-radius: 0 20px 20px 0; }
-
+        :root { --primary: #2ecc71; --cashback: #f39c12; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8f9fa; margin: 0; padding: 15px; }
+        .container { max-width: 450px; margin: auto; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); overflow: hidden; }
+        .product-header { position: relative; text-align: center; padding: 20px; }
+        .product-header img { width: 100%; max-height: 200px; object-fit: contain; }
+        .cashback-badge { position: absolute; top: 10px; left: 0; background: var(--cashback); color: white; padding: 5px 12px; font-size: 12px; font-weight: bold; border-radius: 0 20px 20px 0; }
         .details { padding: 20px; }
-        .price { font-size: 24px; font-weight: bold; color: #333; }
-        .old-price { font-size: 14px; text-decoration: line-through; color: #999; margin-left: 10px; }
+        .edit-section { background: #f1f1f1; padding: 15px; border-radius: 10px; margin-top: 15px; }
+        .qty-input { width: 60px; text-align: center; padding: 5px; font-weight: bold; }
+        .order-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 15px; font-size: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; margin-top: 20px; }
         
-        /* Edit Section */
-        .edit-section { display: flex; align-items: center; justify-content: space-between; margin-top: 15px; background: #f1f1f1; padding: 10px; border-radius: 10px; }
-        .qty-input { width: 60px; text-align: center; border: 1px solid #ddd; padding: 5px; border-radius: 5px; font-weight: bold; }
-        
-        .order-btn { width: 100%; background: var(--primary-color); color: white; border: none; padding: 15px; font-size: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; margin-top: 20px; }
-
-        /* Processing Overlay with Timer */
+        /* Processing Timer Overlay */
         #overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 1000; flex-direction: column; align-items: center; justify-content: center; }
-        .timer-circle { width: 100px; height: 100px; border-radius: 50%; border: 5px solid #eee; border-top: 5px solid var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: bold; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .timer-text { font-size: 30px; position: absolute; animation: none; }
+        .timer-text { font-size: 40px; font-weight: bold; color: var(--primary); margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -42,69 +31,114 @@
 <div class="container" id="mainApp">
     <div class="product-header">
         <div class="cashback-badge">CASHBACK ৳<span id="cbVal">5</span></div>
-        <img id="productPic" src="https://cdn-icons-png.flaticon.com/512/869/869432.png" alt="Milk">
+        <img src="https://cdn-icons-png.flaticon.com/512/869/869432.png" alt="Milk">
     </div>
 
     <div class="details">
-        <div class="price">৳<span id="currentPrice">80</span> <span class="old-price">৳95</span></div>
-        <h2 style="margin: 10px 0;">Pure Fresh Milk</h2>
-        <p style="color: #666; font-size: 14px;">অর্ডার করলে আপনার ব্যালেন্স থেকে টাকা কেটে নেওয়া হবে।</p>
-
+        <div style="font-size: 24px; font-weight: bold;">৳<span id="currentPrice">80</span></div>
+        <h2>Pure Fresh Milk</h2>
+        
         <div class="edit-section">
-            <span>লিটার পরিমাণ লিখুন:</span>
+            <p>আপনার ইউজার আইডি (Mobile):</p>
+            <input type="tel" id="userId" placeholder="017XXXXXXXX" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+            
+            <p>পরিমাণ (লিটার):</p>
             <input type="number" id="qty" class="qty-input" value="1" min="1" oninput="updateTotal()">
         </div>
 
         <div style="margin-top: 15px; font-weight: bold; color: #e74c3c;">
-            Total Minus: ৳<span id="totalMinus">80</span>
+            Total Bill: ৳<span id="totalMinus">80</span>
         </div>
 
-        <button class="order-btn" onclick="startOrder()">অর্ডার কনফার্ম করুন</button>
+        <button class="order-btn" onclick="processOrder()">Confirm Order</button>
     </div>
 </div>
 
 <div id="overlay">
-    <div class="timer-circle">
-        <div class="timer-text" id="timeLeft">5</div>
-    </div>
-    <h2 style="margin-top: 20px;">অর্ডার প্রসেসিং হচ্ছে...</h2>
-    <p>অপেক্ষা করুন, আপনাকে হোমে নিয়ে যাওয়া হচ্ছে।</p>
+    <div class="timer-text" id="timeLeft">10</div>
+    <h2>অর্ডার প্রসেসিং হচ্ছে...</h2>
+    <p>অপেক্ষা করুন, ব্যালেন্স চেক করা হচ্ছে।</p>
 </div>
 
 <script>
-    // Admin Settings (এগুলো আপনি এখান থেকে চেঞ্জ করতে পারবেন)
-    const unitPrice = 80; // ১ লিটারের দাম
-    const cashbackPerUnit = 5; // প্রতি লিটারে ক্যাশব্যাক
+    // --- Firebase Configuration ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyDvSODDF6mMbMq4uAin9nn8r8RWSn6xA7c",
+        authDomain: "amar-bazar-77e5d.firebaseapp.com",
+        databaseURL: "https://amar-bazar-77e5d-default-rtdb.firebaseio.com",
+        projectId: "amar-bazar-77e5d",
+        storageBucket: "amar-bazar-77e5d.firebasestorage.app",
+        messagingSenderId: "1005911914259",
+        appId: "1:1005911914259:web:f6c6f999499f0f757f0ce6"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    const unitPrice = 80;
 
     function updateTotal() {
         let q = document.getElementById('qty').value;
-        if(q < 1) q = 1;
-        
         let total = q * unitPrice;
-        let totalCB = q * cashbackPerUnit;
-        
         document.getElementById('totalMinus').innerText = total;
         document.getElementById('currentPrice').innerText = total;
-        document.getElementById('cbVal').innerText = totalCB;
+        document.getElementById('cbVal').innerText = q * 5;
     }
 
-    function startOrder() {
-        let confirmOrder = confirm("আপনি কি নিশ্চিত? ব্যালেন্স থেকে টাকা কাটা হবে।");
+    function processOrder() {
+        const id = document.getElementById('userId').value;
+        const q = document.getElementById('qty').value;
+        const bill = q * unitPrice;
+
+        if(!id) { alert("ইউজার আইডি দিন!"); return; }
+
+        let confirmOrder = confirm("৳" + bill + " কেটে নেওয়া হবে। আপনি কি নিশ্চিত?");
         if(confirmOrder) {
             document.getElementById('mainApp').style.display = 'none';
             document.getElementById('overlay').style.display = 'flex';
-            
-            let seconds = 5; // ৫ সেকেন্ডের টাইমার
-            let countdown = setInterval(function() {
-                seconds--;
-                document.getElementById('timeLeft').innerText = seconds;
-                if (seconds <= 0) {
-                    clearInterval(countdown);
-                    // এখানে আপনার মেইন অ্যাপের হোম লিঙ্কে পাঠিয়ে দিবে
-                    window.location.href = "https://amarbazar-dev.github.io/My-app/main-home.html"; 
+
+            // Firebase থেকে ব্যালেন্স চেক ও আপডেট
+            const userRef = database.ref('users/' + id);
+            userRef.once('value').then((snapshot) => {
+                if (snapshot.exists()) {
+                    let currentBalance = snapshot.val().balance;
+                    if (currentBalance >= bill) {
+                        // টাকা কেটে নেওয়া
+                        let newBalance = currentBalance - bill;
+                        userRef.update({ balance: newBalance });
+
+                        // অ্যাডমিনকে অর্ডার জানানো (অর্ডার লিস্টে ডাটা সেভ করা)
+                        database.ref('orders/').push({
+                            userId: id,
+                            quantity: q,
+                            totalBill: bill,
+                            status: "Pending",
+                            time: new Date().toLocaleString()
+                        });
+
+                        startTimer();
+                    } else {
+                        alert("আপনার ব্যালেন্স পর্যাপ্ত নয়!");
+                        location.reload();
+                    }
+                } else {
+                    alert("ইউজার আইডি পাওয়া যায়নি!");
+                    location.reload();
                 }
-            }, 1000);
+            });
         }
+    }
+
+    function startTimer() {
+        let seconds = 10;
+        let countdown = setInterval(function() {
+            seconds--;
+            document.getElementById('timeLeft').innerText = seconds;
+            if (seconds <= 0) {
+                clearInterval(countdown);
+                alert("অর্ডার সফল হয়েছে! ১০ মিনিটের মধ্যে অ্যাডমিন কনফার্ম করবে।");
+                window.location.href = "https://amarbazar-dev.github.io/My-app/"; // হোম লিঙ্কে ফিরত
+            }
+        }, 1000);
     }
 </script>
 
